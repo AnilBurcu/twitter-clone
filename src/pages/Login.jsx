@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useState } from "react";
@@ -14,9 +15,15 @@ const Login = () => {
   const [isError, setIsError] = useState(false);
 
   const navigate = useNavigate();
-  // form gonderilince
-  const handleReset = () => {};
+  // sifre sifirlama e-postasi
 
+  const handleReset = () => {
+    sendPasswordResetEmail(auth, email)
+      .then(() => toast.info("Sifre sifirlama email'i gonderilmistir."))
+      .catch((err) => toast.error("Bir hata olustu" + err.code));
+  };
+
+  // form gonderilince
   const handleSubmit = (e) => {
     e.preventDefault();
 
