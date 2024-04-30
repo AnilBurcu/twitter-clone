@@ -2,6 +2,12 @@ import { useState } from "react";
 
 const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
+
+  // form gonderilince
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
   return (
     <section className="h-screen grid place-items-center">
       <div className="bg-black flex flex-col gap-10 py-16 px-32 rounded-lg">
@@ -15,7 +21,7 @@ const Login = () => {
           <img className="h-[30px]" src="/google-logo.svg" />
           Google ile Giriş Yap
         </button>
-        <form className="flex flex-col">
+        <form onSubmit={handleSubmit} className="flex flex-col">
           <label>Email</label>
           <input
             className="text-black rounded mt-1 p-2 outline-none shadow-none focus:shadow-[gray]"
