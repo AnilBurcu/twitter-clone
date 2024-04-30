@@ -1,12 +1,47 @@
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { useState } from "react";
+import { auth } from "../firebase/config";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isError, setIsError] = useState(false);
 
+  const navigate = useNavigate();
   // form gonderilince
+  const handleReset = () => {};
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    console.log(email, password);
+
+    if (isSignUp) {
+      // eger kaydol modundaysa: hesap olustur
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          toast.success("Hesabiniz olusturuldu");
+          navigate("/home");
+        })
+        .catch((err) => toast.error("Bir sorun olustu: " + err.code));
+    } else {
+      // giris modundaysa: giris yap
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          toast.success("Hesabiniza giris yapildi");
+          navigate("/home");
+        })
+        .catch((err) => {
+          toast.error("Bir sorun olustu: " + err.code);
+          if (err.code === "auth/invalid-credential") setIsError(true);
+        });
+    }
   };
   return (
     <section className="h-screen grid place-items-center">
@@ -24,13 +59,15 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="flex flex-col">
           <label>Email</label>
           <input
+            onChange={(e) => setEmail(e.target.value)}
             className="text-black rounded mt-1 p-2 outline-none shadow-none focus:shadow-[gray]"
             type="text"
           />
           <label className="flex flex-col mt-2">Sifre</label>
           <input
+            onChange={(e) => setPassword(e.target.value)}
             className="text-black rounded mt-1 p-2 outline-none shadow-none focus:shadow-[gray]"
-            type="text"
+            type="password"
           />
           <button className="mt-10 bg-white text-black rounded-full p-1 font-bold transition hover:bg-gray-300">
             {isSignUp ? "Kaydol" : "Giris Yap"}
@@ -44,6 +81,14 @@ const Login = () => {
             </span>
           </p>
         </form>
+        {isError && (
+          <p
+            onClick={handleReset}
+            className="text-red-500 text-center cursor-pointer"
+          >
+            Sifrenizi mi unuttunuz?
+          </p>
+        )}
       </div>
     </section>
   );
