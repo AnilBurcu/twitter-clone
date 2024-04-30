@@ -2,9 +2,10 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
 import { useState } from "react";
-import { auth } from "../firebase/config";
+import { auth, provider } from "../firebase/config";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -15,8 +16,18 @@ const Login = () => {
   const [isError, setIsError] = useState(false);
 
   const navigate = useNavigate();
-  // sifre sifirlama e-postasi
 
+  // google ile giris yap
+  const handleGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then(() => {
+        toast.success("Hesabiniza giris yapildi");
+        navigate("/home");
+      })
+      .catch((err) => toast.error("Bir sorun olustu: " + err.code));
+  };
+
+  // sifre sifirlama e-postasi
   const handleReset = () => {
     sendPasswordResetEmail(auth, email)
       .then(() => toast.info("Sifre sifirlama email'i gonderilmistir."))
@@ -59,7 +70,10 @@ const Login = () => {
 
         <h1 className="text-lg font-bold text-center">Twitter'a giriş yap</h1>
 
-        <button className="bg-white flex items-center py-2 px-10 rounded-full gap-3 transition hover:bg-gray-300 text-black  whitespace-nowrap">
+        <button
+          onClick={handleGoogle}
+          className="bg-white flex items-center py-2 px-10 rounded-full gap-3 transition hover:bg-gray-300 text-black  whitespace-nowrap"
+        >
           <img className="h-[30px]" src="/google-logo.svg" />
           Google ile Giriş Yap
         </button>
