@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
-import Home from "./pages/Home";
+import Feed from "./pages/Feed";
 import Protected from "./pages/Protected";
 
 const App = () => {
@@ -11,7 +11,7 @@ const App = () => {
 
         {/* Kullanicinin ersinmek icin hesabina giris yapmasi zorunlu olan route'lari kapsayici route icine aldik */}
         <Route element={<Protected />}>
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={<Feed />} />
           <Route path="/profile" element={<h1>profile</h1>} />
           <Route path="/settings" element={<h1>settings</h1>} />
         </Route>
