@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { GoogleAuthProvider } from "firebase/auth/cordova";
+import { initializeApp } from 'firebase/app';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -16,10 +17,14 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// auth hizmetinin referansini al
-
+// auth hizmetinin referansını al
 export const auth = getAuth(app);
 
-// google saglayicisinin kurulumu
-
+// google sağlayıcısının kurulumu
 export const provider = new GoogleAuthProvider();
+
+// veritbanının referansını alma
+export const db = getFirestore(app);
+
+// medya depolama alanının referansını alma
+export const storage = getStorage(app);

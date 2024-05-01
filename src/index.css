@@ -2,10 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  font-family: "SF Pro Display";
+}
 body {
   background: #242424;
   color: white;
-  font-family: "SF Pro Display";
 }
 
 .feed {

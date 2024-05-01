@@ -17,14 +17,14 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  // google ile giris yap
+  // google ile giriş yap
   const handleGoogle = () => {
     signInWithPopup(auth, provider)
       .then(() => {
-        toast.success("Hesabiniza giris yapildi");
+        toast.success("Hesaba giriş yapıldı");
         navigate("/home");
       })
-      .catch((err) => toast.error("Bir sorun olustu: " + err.code));
+      .catch((err) => toast.error("Bir sorun oluştu: " + err.code));
   };
 
   // sifre sifirlama e-postasi
