@@ -3,6 +3,7 @@ import Form from "../../components/Form";
 import Post from "../../components/Post";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../../firebase/config";
+import Loader from "../../components/Lodaer";
 
 const Main = ({ user }) => {
   const [tweets, setTweets] = useState();
@@ -12,7 +13,7 @@ const Main = ({ user }) => {
     // sorgu ayarlari belirleme
     const q = query(tweetCol, orderBy("createdAt", "desc"));
     // koleksyondaki verilere abone ol(canli olarak)
-    onSnapshot(q, (snapshot) => {
+    const unsub = onSnapshot(q, (snapshot) => {
       // gecici  dizi
       const temp = [];
 
@@ -22,6 +23,7 @@ const Main = ({ user }) => {
       setTweets(temp);
     });
     // kullanici sayfadan ayrilirsa aboneligi sonlandir
+    return () => unsub();
   }, []);
   return (
     <div className="border-zinc-600 border overflow-y-auto">
@@ -30,10 +32,11 @@ const Main = ({ user }) => {
       </header>
 
       <Form user={user} />
-      <Post />
-      <Post />
-      <Post />
-      <Post />
+      {!tweets ? (
+        <Loader />
+      ) : (
+        tweets.map((tweet, i) => <Post key={i} tweet={tweet} />)
+      )}
     </div>
   );
 };
