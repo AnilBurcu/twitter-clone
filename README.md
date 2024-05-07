@@ -2,13 +2,10 @@
 
 I created a Twitter homepage with CRUD algorithm which is used React and Firebase.
 
-Source Code & More : https://github.com/AnilBurcu/twitter-clone
-
 <h2>React, Firebase<h2>
 <h2>Link: https://github.com/AnilBurcu/twitter-clone<h2>
-<h2> Screen <h2>
 
-![](Twitter.gif)
+![](Twitter-3.gif)
 
 # Libraries
 
