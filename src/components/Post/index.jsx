@@ -1,14 +1,22 @@
-import React, { useState } from "react";
-import UserInfo from "./UserInfo";
-import Content from "./Content";
 import Buttons from "./Buttons";
+import Content from "./Content";
+import UserInfo from "./UserInfo";
 import { auth, db } from "./../../firebase/config";
-import DropDown from "./DropDown";
-import { deleteDoc, doc } from "firebase/firestore";
+import Dropdown from "./DropDown";
+import {
+  doc,
+  deleteDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import EditMode from "./EditMode";
 
 const Post = ({ tweet }) => {
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+
   // silme butonuna tıklanınca
   const handleDelete = () => {
     const tweetRef = doc(db, "tweets", tweet.id);
@@ -18,9 +26,27 @@ const Post = ({ tweet }) => {
       .catch((err) => toast.error("Tweet silinirken bir sorun oluştu"));
   };
 
+  // düzenle butonuna tıklanınca
   const handleEdit = () => {
-    setIsEdit(true);
+    setIsEditMode(true);
   };
+
+  // oturumu açık olan kullanıcı bu tweeti like'ladımı?
+  const isLiked = tweet.likes.includes(auth.currentUser.uid);
+
+  // like butonuna tıklanınca
+  const toggleLike = async () => {
+    // güncellenicek belgenin referanısını al
+    const tweetRef = doc(db, "tweets", tweet.id);
+
+    // tweeti like'lamışsa
+    await updateDoc(tweetRef, {
+      likes: isLiked
+        ? arrayRemove(auth.currentUser.uid) // diziden kaldır
+        : arrayUnion(auth.currentUser.uid), // değilse diziye ekle
+    });
+  };
+
   return (
     <div className="flex gap-3 border-b py-6 px-3 border-zinc-600">
       <img
@@ -28,15 +54,26 @@ const Post = ({ tweet }) => {
         src={tweet.user.photo}
         alt={tweet.user.name}
       />
+
       <div className="w-full">
         <div className="flex justify-between items-center">
           <UserInfo tweet={tweet} />
           {auth.currentUser.uid === tweet.user.id && (
-            <DropDown handleDelete={handleDelete} handleEdit={handleEdit} />
+            <Dropdown handleDelete={handleDelete} handleEdit={handleEdit} />
           )}
         </div>
-        <Content tweet={tweet} />
-        <Buttons likeCount={tweet.likes.length} />
+
+        {isEditMode ? (
+          <EditMode tweet={tweet} close={() => setIsEditMode(false)} />
+        ) : (
+          <Content tweet={tweet} />
+        )}
+
+        <Buttons
+          isLiked={isLiked}
+          toggleLike={toggleLike}
+          likeCount={tweet.likes.length}
+        />
       </div>
     </div>
   );
