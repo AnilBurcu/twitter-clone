@@ -9,7 +9,7 @@ const DropDown = ({ handleDelete, handleEdit }) => {
     <div>
       <label className="popup">
         <input ref={inputRef} type="checkbox" />
-        <div className="burger" tabindex="0">
+        <div className="burger" tabIndex="0">
           <span></span>
           <span></span>
           <span></span>
